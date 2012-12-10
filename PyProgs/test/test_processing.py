@@ -7,7 +7,7 @@ from options import WavelocOptions
 
 def suite():
   suite = unittest.TestSuite()
-  suite.addTest(KurtosisTests('test_ss_kurtosis'))
+  suite.addTest(KurtosisTests('test_sw_kurtosis'))
   suite.addTest(ProcessingTests('test_positive_gradient'))
   suite.addTest(ProcessingTests('test_processing'))
   suite.addTest(ProcessingTests('test_channel_read'))
@@ -27,25 +27,33 @@ def waveforms_to_signature(base_path,datadir,dataglob,output_filename):
  
 class KurtosisTests(unittest.TestCase):
 
-  def test_ss_kurtosis(self):
+  def setUp(self):
     import numpy as np
-    from filters import sw_kurtosis1, sw_kurtosis2
 
+    self.nkurt=7
     npts=1000
-    nkurt=7
     r=np.random.randn(npts)
     s=np.zeros(npts)
     s[npts/2:]=10.0
-    sig=s+r
+    self.sig=s+r
 
-    k1=sw_kurtosis1(sig,nkurt)
-    k2=sw_kurtosis2(sig,nkurt)
+  def test_sw_kurtosis(self):
+    import numpy as np
+    from filters import sw_kurtosis1, sw_kurtosis2
+
+    k1=sw_kurtosis1(self.sig,self.nkurt)
+    k2=sw_kurtosis2(self.sig,self.nkurt)
 
     self.assertEquals(k1.shape,k2.shape)
     np.testing.assert_allclose(k1,k2,5)
     self.assertAlmostEquals(np.max(k1), np.max(k2))
     self.assertEquals(np.argmax(k1), np.argmax(k2))
    
+    
+  def test_single_timestep_ratio(self):
+    import numpy as np
+    from filters import sw_kurtosis1, sw_kurtosis2
+    pass
     
    
 

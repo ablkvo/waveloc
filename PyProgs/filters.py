@@ -296,6 +296,18 @@ def variance(x,dt,LENwin):
         vari.append(a)
     return(vari)
 
+def single_timestep_ratio(x):
+    """
+    For a time-series, calculates the absolute value of the ratio of element n / element n-1
+    """
+
+    n=len(x)
+    x0=x[0:n-1]
+    x1=x[1:n]
+    xs=np.zeros(n)
+    xs[1:n]=np.abs(x1/x0)
+    return xs
+
 def gradient(x,dt,LENwin):
     """
     Determines the gradient of a timeseries. 
